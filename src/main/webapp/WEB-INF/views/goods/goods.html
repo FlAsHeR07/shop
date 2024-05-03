@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Goods</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #444;
+            color: #fff;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid grey;
+            font-size: 14px;
+        }
+        th {
+            background-color: #222;
+        }
+        tr:hover {
+            background-color: #555;
+        }
+        .btn-add, .btn-remove {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .btn-remove {
+            background-color: red;
+        }
+        .quantity {
+            text-align: center;
+        }
+        .good-name {
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+        .checkout-button {
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            background-color: #163591;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>Назва товару</th>
+        <th>Ціна, грн.</th>
+        <th>Кількість</th>
+        <th>Додати</th>
+        <th>Видалити</th>
+    </tr>
+    <tr th:each="good : ${goods}">
+        <td><a th:href="@{/goods/{id}(id =${good.getGood_id()})}" th:text="${good.getName()}" class="good-name"></a></td>
+        <td th:text="${good.getPrice_grn()}"></td>
+        <td class="quantity">0</td>
+        <td><button class="btn-add">+</button></td>
+        <td><button class="btn-remove">-</button></td>
+    </tr>
+</table>
+
+<a href="#" class="checkout-button">Оформити замовлення</a>
+
+</body>
+</html>
