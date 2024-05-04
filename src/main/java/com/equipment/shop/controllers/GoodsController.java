@@ -27,7 +27,7 @@ public class GoodsController {
 
     @GetMapping("/{id}")
     public String showByID(@PathVariable("id") int id, Model model) {
-        model.addAttribute(goodDAO.getGoodById(id));
+        model.addAttribute("good", goodDAO.getGoodById(id));
         return "goods/good";
     }
 

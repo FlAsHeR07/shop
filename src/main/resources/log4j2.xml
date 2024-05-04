@@ -9,6 +9,7 @@
         <Logger name="com.equipment.shop.ShopApplication" level="trace" additivity="false">
             <AppenderRef ref="LogToConsole"/>
         </Logger>
+
         <Root level="error">
             <AppenderRef ref="LogToConsole"/>
         </Root>

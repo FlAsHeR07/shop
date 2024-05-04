@@ -1,40 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Goods</title>
     <style>
         * {
-            margin: 0px;
-            padding: 0px;
+            box-sizing: border-box;
         }
         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
             background-color: #333;
             color: #fff;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 0 -10px;
+        }
+        .item {
+            width: calc(25% - 20px);
+            margin: 0 10px 20px;
             background-color: #444;
-            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid grey;
+        .item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: white;
+        }
+        .item-price {
+            color: #20B2AA;
             font-size: 14px;
         }
-        th {
-            background-color: #222;
-        }
-        tr:hover {
-            background-color: #555;
-        }
-        .btn-add, .btn-remove {
+        .btn-add {
             background-color: #4CAF50;
             border: none;
             color: white;
@@ -43,56 +53,26 @@
             text-decoration: none;
             display: inline-block;
             font-size: 14px;
-            margin: 4px 2px;
+            margin-top: 10px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .btn-remove {
-            background-color: red;
-        }
-        .quantity {
-            text-align: center;
-        }
-        .good-name {
-            font-weight: bold;
-            color: #fff;
-            text-decoration: none;
-        }
-        .checkout-button {
-            position: fixed;
-            bottom: 0px;
-            right: 0px;
-            background-color: #163591;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 20px;
-            cursor: pointer;
+        .btn-add:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
-<table>
-    <tr>
-        <th>Назва товару</th>
-        <th>Ціна, грн.</th>
-        <th>Кількість</th>
-        <th>Додати</th>
-        <th>Видалити</th>
-    </tr>
-    <tr th:each="good : ${goods}">
-        <td><a th:href="@{/goods/{id}(id =${good.getGood_id()})}" th:text="${good.getName()}" class="good-name"></a></td>
-        <td th:text="${good.getPrice_grn()}"></td>
-        <td class="quantity">0</td>
-        <td><button class="btn-add">+</button></td>
-        <td><button class="btn-remove">-</button></td>
-    </tr>
-</table>
-
-<a href="#" class="checkout-button">Оформити замовлення</a>
+<div class="container">
+    <div class="item" th:each="good : ${goods}">
+        <a th:href="@{/goods/{id}(id=${good.getGood_id()})}">
+            <img th:src= "*{'data:image/jpg;base64,' + good.getImage()}" height="350px" width="350px" alt="Product Image">
+            <div class="item-title" th:text="${good.getName()}"></div>
+            <div class="item-price" th:text="'Ціна, грн.: ' + ${good.getPrice_grn()}"></div>
+        </a>
+    </div>
+</div>
 
 </body>
 </html>

@@ -6,13 +6,15 @@ public class Good {
     private long price_kopeck;
     private String description;
     private int category_id;
+    private String imageBase64;
 
-    public Good(int good_id, String name, long price_kopeck, String description, int category_id) {
+    public Good(int good_id, String name, long price_kopeck, String description, int category_id, String imageBase64) {
         this.good_id = good_id;
         this.name = name;
         this.price_kopeck = price_kopeck;
         this.description = description;
         this.category_id = category_id;
+        this.imageBase64 = imageBase64;
     }
 
     public int getGood_id() {
@@ -57,5 +59,13 @@ public class Good {
 
     public void setCategory_id(int category_id) {
         this.category_id = category_id;
+    }
+
+    public String getImage() {
+        return imageBase64;
+    }
+
+    public void setImage(String image) {
+        this.imageBase64 = image;
     }
 }

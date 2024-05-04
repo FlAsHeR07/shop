@@ -3,12 +3,13 @@ package com.equipment.shop.dao;
 import com.equipment.shop.models.Good;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.support.lob.LobHandler;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +27,21 @@ public class GoodDAO {
     public List<Good> getAllGoods() {
         List<Good> goods = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
-            String query = "SELECT * FROM goods";
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
+
+            PreparedStatement ps = connection.prepareStatement("SELECT good_id, name, price_kopeck, description, category_id, encode(image, 'base64') AS imageCode FROM goods ORDER BY good_id ASC;");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
                 goods.add(new Good(
-                        resultSet.getInt("good_id"),
-                        resultSet.getString("name"),
-                        resultSet.getLong("price_kopeck"),
-                        resultSet.getString("description"),
-                        resultSet.getInt("category_id")
+                        rs.getInt("good_id"),
+                        rs.getString("name"),
+                        rs.getLong("price_kopeck"),
+                        rs.getString("description"),
+                        rs.getInt("category_id"),
+                        rs.getString("imageCode")
                 ));
             }
+            rs.close();
+            ps.close();
             return goods;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -45,27 +49,23 @@ public class GoodDAO {
     }
 
     public Good getGoodById(int id) {
+        Good good;
         try {
-            Statement statement = connection.createStatement();
-            String query = "SELECT * FROM goods WHERE good_id = " + id;
-            ResultSet resultSet = statement.executeQuery(query);
-            resultSet.next();
-            Good good = new Good(
-                    resultSet.getInt("good_id"),
-                    resultSet.getString("name"),
-                    resultSet.getLong("price_kopeck"),
-                    resultSet.getString("description"),
-                    resultSet.getInt("category_id")
+            PreparedStatement ps = connection.prepareStatement("SELECT good_id, name, price_kopeck, description, category_id, encode(image, 'base64') AS imageCode FROM goods where good_id = " + id + ";");
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            good = new Good(
+                    rs.getInt("good_id"),
+                    rs.getString("name"),
+                    rs.getLong("price_kopeck"),
+                    rs.getString("description"),
+                    rs.getInt("category_id"),
+                    rs.getString("imageCode")
             );
-
-            return new Good(
-                        resultSet.getInt("good_id"),
-                        resultSet.getString("name"),
-                        resultSet.getLong("price_kopeck"),
-                        resultSet.getString("description"),
-                        resultSet.getInt("category_id")
-                );
-            } catch (SQLException e) {
+            rs.close();
+            ps.close();
+            return good;
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

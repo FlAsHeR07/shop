@@ -1,47 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Details</title>
+  <title>Goods</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      padding: 20px;
       background-color: #333;
       color: #fff;
     }
     .container {
-      max-width: 800px;
-      margin: 50px auto;
-      padding: 20px;
-      background-color: #222;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 0 -10px;
     }
-    h1 {
-      text-align: center;
+    .item {
+      width: calc(25% - 20px);
+      margin: 0 10px 20px;
+      background-color: #444;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
+    }
+    .item img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .item-title {
+      font-weight: bold;
+      margin-bottom: 5px;
       color: #fff;
     }
-    .product-info {
-      margin-top: 20px;
+    .item-price {
+      color: #999;
+      font-size: 14px;
     }
-    .product-info p {
-      margin: 10px 0;
+    .btn-add {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-add:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Інформація про товар</h1>
-  <div class="product-info">
-    <p><strong>Назва товару:</strong> Імпульсні реле</p>
-    <p><strong>Категорія:</strong> Електрообладнання</p>
-    <p><strong>Ціна (в гривнях):</strong> 150</p>
-    <p><strong>Наявність на складі:</strong> Так</p>
-    <p><strong>Опис:</strong> Імпульсні реле - це пристрої для управління електричними схемами, що дозволяють передавати електричний сигнал на велику відстань. Вони широко використовуються в автоматизованих системах управління, промисловості та інших сферах.</p>
+  <div class="item">
+    <img th:src= "*{'data:image/jpg;base64,' + good.getImage()}" height="350px" width="350px" alt="Product Image">
+    <div class="item-title" th:text="${good.getName()}"></div>
+    <div class="item-price" th:text="'Ціна, грн.: ' + ${good.getPrice_grn()}"></div>
+    <button class="btn-add">Додати</button>
   </div>
 </div>
 
