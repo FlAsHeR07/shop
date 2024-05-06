@@ -27,7 +27,6 @@ public class GoodDAO {
     public List<Good> getAllGoods() {
         List<Good> goods = new ArrayList<>();
         try {
-
             PreparedStatement ps = connection.prepareStatement("SELECT good_id, name, price_kopeck, description, category_id, encode(image, 'base64') AS imageCode FROM goods ORDER BY good_id ASC;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
