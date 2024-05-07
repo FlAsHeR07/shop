@@ -1,5 +1,7 @@
 package com.equipment.shop.models;
 
+import java.util.List;
+
 public class Good {
     private int good_id;
     private String name;
@@ -7,14 +9,16 @@ public class Good {
     private String description;
     private int category_id;
     private String imageBase64;
+    private List<String> manufacturers;
 
-    public Good(int good_id, String name, long price_kopeck, String description, int category_id, String imageBase64) {
+    public Good(int good_id, String name, long price_kopeck, String description, int category_id, String imageBase64, List<String> manufacturers) {
         this.good_id = good_id;
         this.name = name;
         this.price_kopeck = price_kopeck;
         this.description = description;
         this.category_id = category_id;
         this.imageBase64 = imageBase64;
+        this.manufacturers = manufacturers;
     }
 
     public int getGood_id() {
@@ -67,5 +71,13 @@ public class Good {
 
     public void setImage(String image) {
         this.imageBase64 = image;
+    }
+
+    public List<String> getManufacturers() {
+        return manufacturers;
+    }
+
+    public void setManufacturers(List<String> manufacturers) {
+        this.manufacturers = manufacturers;
     }
 }

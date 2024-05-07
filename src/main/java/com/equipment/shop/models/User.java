@@ -2,6 +2,7 @@ package com.equipment.shop.models;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
     private int user_id;

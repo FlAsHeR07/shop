@@ -27,35 +27,46 @@ public class AccountController {
     @GetMapping("/login/form")
     public String loginForm(HttpSession httpSession, Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("authenticationWarning", httpSession.getAttribute("authenticationWarning"));
+        if (httpSession.getAttribute("authenticationWarning") instanceof AuthenticationException) {
+            String warn = ((AuthenticationException) httpSession.getAttribute("authenticationWarning")).getMessage();
+            model.addAttribute("authenticationWarning", warn);
+        }
+        else {
+            httpSession.setAttribute("authenticationWarning", null);
+        }
         return "authentication/log_in";
     }
 
     @GetMapping("/signup/form")
     public String signupForm(HttpSession httpSession, Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("authenticationWarning", httpSession.getAttribute("authenticationWarning"));
+        if (httpSession.getAttribute("authenticationWarning") instanceof RegistrationException) {
+            String warn = ((RegistrationException) httpSession.getAttribute("authenticationWarning")).getMessage();
+            model.addAttribute("authenticationWarning", warn);
+        } else {
+            httpSession.setAttribute("authenticationWarning", null);
+        }
         return "authentication/sign_up";
     }
 
     @GetMapping("/current")
     public String showCurrentUser(HttpSession httpSession, Model model) {
-        httpSession.setAttribute("authenticationWarning", "");
+        httpSession.setAttribute("authenticationWarning", null);
         Object o = httpSession.getAttribute("currentUser");
         User user = (User) o;
         if (user == null) {
             return "redirect:/account/login/form";
         }
         model.addAttribute("user", user);
-        return "authentication/user";
+        return "redirect:/goods";
     }
 
     @GetMapping("/login")
-    public String login(HttpSession httpSession, @ModelAttribute("user") User user, Model model) {
+    public String login(HttpSession httpSession, @ModelAttribute("user") User user) {
         try {
             userDAO.tryLogIn(user);
         } catch (AuthenticationException e) {
-            httpSession.setAttribute("authenticationWarning", e.getMessage());
+            httpSession.setAttribute("authenticationWarning", e);
             return "redirect:/account/login/form";
         }
         httpSession.setAttribute("currentUser", userDAO.getUser(user.getUsername(), user.getPassword()));
@@ -64,11 +75,11 @@ public class AccountController {
     }
 
     @PostMapping("/signup")
-    public String signup(HttpSession httpSession, @ModelAttribute("user") User user, Model model) {
+    public String signup(HttpSession httpSession, @ModelAttribute("user") User user) {
         try {
             userDAO.trySignUp(user);
         } catch (RegistrationException e) {
-            httpSession.setAttribute("authenticationWarning", e.getMessage());
+            httpSession.setAttribute("authenticationWarning", e);
             return "redirect:/account/signup/form";
         }
         httpSession.setAttribute("currentUser", userDAO.getUser(user.getUsername(), user.getPassword()));
@@ -76,4 +87,9 @@ public class AccountController {
         return "redirect:/account/current";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.setAttribute("currentUser", null);
+        return "redirect:/account/current";
+    }
 }
