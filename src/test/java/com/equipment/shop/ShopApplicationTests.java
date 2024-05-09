@@ -1,10 +1,9 @@
 package com.equipment.shop;
 
-import com.equipment.shop.exception.RegistrationException;
+import com.equipment.shop.exceptions.RegistrationException;
 import com.equipment.shop.models.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 //@SpringBootTest
 class ShopApplicationTests {

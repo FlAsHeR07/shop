@@ -1,4 +1,4 @@
-package com.equipment.shop.exception;
+package com.equipment.shop.exceptions;
 
 public class AuthenticationException extends Exception {
     public AuthenticationException(String message) {

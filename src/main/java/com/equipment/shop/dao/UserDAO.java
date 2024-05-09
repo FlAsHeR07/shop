@@ -1,8 +1,7 @@
 package com.equipment.shop.dao;
 
-import com.equipment.shop.exception.AuthenticationException;
-import com.equipment.shop.exception.RegistrationException;
-import com.equipment.shop.models.Good;
+import com.equipment.shop.exceptions.AuthenticationException;
+import com.equipment.shop.exceptions.RegistrationException;
 import com.equipment.shop.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

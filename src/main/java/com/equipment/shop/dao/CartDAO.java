@@ -53,6 +53,12 @@ public class CartDAO {
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE users SET cart = ? WHERE user_id = ?;");
             ps.setInt(2, user.getUser_id());
+            if (cart == null) {
+                ps.setBytes(1, null);
+                ps.execute();
+                ps.close();
+                return;
+            }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(baos);
             out.writeObject(cart);

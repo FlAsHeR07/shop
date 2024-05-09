@@ -1,8 +1,8 @@
 package com.equipment.shop.controllers;
 
 import com.equipment.shop.dao.UserDAO;
-import com.equipment.shop.exception.AuthenticationException;
-import com.equipment.shop.exception.RegistrationException;
+import com.equipment.shop.exceptions.AuthenticationException;
+import com.equipment.shop.exceptions.RegistrationException;
 import com.equipment.shop.models.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
