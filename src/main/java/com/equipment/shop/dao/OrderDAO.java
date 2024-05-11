@@ -71,6 +71,20 @@ public class OrderDAO {
             ps.setInt(1, user_id);
             ps.setBytes(2, information);
             ps.execute();
+            if (order.getCart() != null) {
+                for (Map.Entry<Integer, Integer> entry : order.getCart().entrySet()) {
+                    PreparedStatement getQuantity = connection.prepareStatement("SELECT quantity FROM goods WHERE good_id = ?");
+                    getQuantity.setInt(1, entry.getKey());
+                    ResultSet resQuantity = getQuantity.executeQuery();
+                    resQuantity.next();
+                    int quantity = resQuantity.getInt("quantity") - entry.getValue();
+                    PreparedStatement updateGoods = connection.prepareStatement("UPDATE goods SET quantity = ? WHERE good_id = ?");
+                    updateGoods.setInt(1, quantity);
+                    updateGoods.setInt(2, entry.getKey());
+                    updateGoods.execute();
+                }
+            }
+
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
