@@ -9,6 +9,7 @@ public class Order implements Serializable {
     private Date timeOfPayment;
     private double price;
     private Map<Integer, Integer> cart;
+    private Map<String, Integer> cartForView;
 
     public Order(int order_id, Date timeOfPayment, double price, Map<Integer, Integer> cart) {
         this.order_id = order_id;
@@ -47,5 +48,13 @@ public class Order implements Serializable {
 
     public void setCart(Map<Integer, Integer> cart) {
         this.cart = cart;
+    }
+
+    public Map<String, Integer> getCartForView() {
+        return cartForView;
+    }
+
+    public void setCartForView(Map<String, Integer> cartForView) {
+        this.cartForView = cartForView;
     }
 }

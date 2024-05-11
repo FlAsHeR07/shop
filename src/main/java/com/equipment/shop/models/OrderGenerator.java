@@ -1,7 +1,9 @@
 package com.equipment.shop.models;
 
+import com.equipment.shop.dao.OrderDAO;
 import com.liqpay.LiqPay;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -11,10 +13,9 @@ import java.util.Properties;
 
 @Component
 public class OrderGenerator {
-    private int num;
-
     private final String PUBLIC_KEY;
     private final String PRIVATE_KEY;
+    private final OrderDAO orderDAO;
 
     {
         try {
@@ -23,26 +24,15 @@ public class OrderGenerator {
             properties.load(resourceStream);
             PUBLIC_KEY = properties.getProperty("PUBLIC_KEY");
             PRIVATE_KEY = properties.getProperty("PRIVATE_KEY");
-            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\vlads\\Desktop\\shop\\src\\main\\resources\\id.txt"));
-            num = Integer.valueOf(reader.readLine());
-            reader.close();
             resourceStream.close();
         } catch (NullPointerException | IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-    private int getId() {
-        try {
-            int result = num++;
-            BufferedWriter writer = new BufferedWriter(new FileWriter("C:\\Users\\vlads\\Desktop\\shop\\src\\main\\resources\\id.txt", false));
-            writer.write(String.valueOf(num));
-            writer.close();
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Autowired
+    public OrderGenerator(OrderDAO orderDAO) {
+        this.orderDAO = orderDAO;
     }
 
     public String createPaymentFormHtml(HttpSession httpSession, double uah) {
@@ -51,7 +41,7 @@ public class OrderGenerator {
         params.put("amount", String.valueOf(uah));
         params.put("currency", "UAH");
         params.put("description", "Оплата обраних товарів");
-        params.put("order_id", String.valueOf(getId()));
+        params.put("order_id", String.valueOf(orderDAO.lastOrder() + 1));
         params.put("version", "3");
         params.put("sandbox", "1");
         params.put("result_url", "http://electropoint.hopto.org/order/new");

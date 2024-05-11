@@ -4,11 +4,14 @@ import com.equipment.shop.dao.CartDAO;
 import com.equipment.shop.dao.GoodDAO;
 import com.equipment.shop.dao.OrderDAO;
 import com.equipment.shop.models.Order;
+import com.equipment.shop.models.User;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +23,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class OrdersController {
@@ -40,6 +44,14 @@ public class OrdersController {
     @GetMapping("/order/new")
     public String showSuccessPage() {
         return "order/payment";
+    }
+
+    @GetMapping("/orders")
+    public String showAllOrders(HttpSession httpSession, Model model) {
+        User user = (User) httpSession.getAttribute("currentUser");
+        List<Order> orders = orderDAO.getOrders(user);
+        model.addAttribute("orders", orders);
+        return "order/all_orders";
     }
 
 
