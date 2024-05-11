@@ -167,16 +167,16 @@
 
 <script>
   function goToCart() {
-    window.location.href = "http://localhost:8080/cart";
+    window.location.href = "http://electropoint.hopto.org/cart";
   }
 
   function goToOrders() {
-    window.location.href = "http://localhost:8080/orders";
+    window.location.href = "http://electropoint.hopto.org/orders";
   }
 
   function logout() {
     if (window.confirm('Ви впевнені, що бажаєте вийти?')) {
-      window.location.href = "http://localhost:8080/account/logout";
+      window.location.href = "http://electropoint.hopto.org/account/logout";
     }
   }
 
@@ -242,7 +242,7 @@
     // Створюємо нову URL-адресу з параметром quantity
     let urlWithQuantity = currentUrl + '?quantity=' + quantity;
     // Перенаправляємо користувача на нову сторінку
-    window.location.href = 'http://localhost:8080/cart/add?quantity=' + quantity;
+    window.location.href = 'http://electropoint.hopto.org/cart/add?quantity=' + quantity;
   }
 
 </script>

@@ -6,6 +6,8 @@ import com.equipment.shop.models.Good;
 import com.equipment.shop.models.OrderGenerator;
 import com.equipment.shop.models.User;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,21 +35,21 @@ public class CartController {
     public String addToCart(HttpSession httpSession, @RequestParam("quantity") int quantity, Model model) {
         User currentUser = (User) httpSession.getAttribute("currentUser");
         Integer itemId = (Integer) httpSession.getAttribute("openedItemId");
-        Map<Integer, Integer> cart = cartDAO.getCart(currentUser);
+        Map<Integer, Integer> cart = cartDAO.getCart(currentUser.getUser_id());
         Integer currentQuantity = cart.get(itemId);
         if (currentQuantity == null) {
             cart.put(itemId, quantity);
         } else {
             cart.put(itemId, currentQuantity + quantity);
         }
-        cartDAO.setCart(currentUser, cart);
+        cartDAO.setCart(currentUser.getUser_id(), cart);
         return "redirect:/goods";
     }
 
     @GetMapping()
     public String showCart(HttpSession httpSession, Model model) {
         User currentUser = (User) httpSession.getAttribute("currentUser");
-        Map<Integer, Integer> cartIntegers = cartDAO.getCart(currentUser);
+        Map<Integer, Integer> cartIntegers = cartDAO.getCart(currentUser.getUser_id());
         Map<String, Integer> cart = new HashMap<>();
         long kopecks = 0;
         for (Map.Entry<Integer, Integer> entry : cartIntegers.entrySet()) {
@@ -58,7 +60,7 @@ public class CartController {
         double uah = ((double)kopecks) / 100;
         model.addAttribute("cart", cart);
         model.addAttribute("price", uah);
-        model.addAttribute("liqpayForm", orderGenerator.createPaymentFormHtml(uah));
+        model.addAttribute("liqpayForm", orderGenerator.createPaymentFormHtml(httpSession, uah));
 
         return "orders/cart";
     }
@@ -66,7 +68,7 @@ public class CartController {
     @GetMapping("/clear")
     public String clearCart(HttpSession httpSession, Model model) {
         User currentUser = (User) httpSession.getAttribute("currentUser");
-        cartDAO.setCart(currentUser, null);
+        cartDAO.setCart(currentUser.getUser_id(), null);
         return "redirect:/goods";
     }
 }

@@ -24,10 +24,10 @@ public class CartDAO {
         this.connection = connection;
     }
 
-    public Map<Integer, Integer> getCart(User user) {
+    public Map<Integer, Integer> getCart(int  user_id) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT cart FROM users WHERE user_id = ?;");
-            ps.setInt(1, user.getUser_id());
+            ps.setInt(1, user_id);
             ResultSet rs = ps.executeQuery();
             rs.next();
             byte [] bytes = rs.getBytes("cart");
@@ -49,10 +49,10 @@ public class CartDAO {
         }
     }
 
-    public void setCart(User user, Map<Integer, Integer> cart) {
+    public void setCart(int user_id, Map<Integer, Integer> cart) {
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE users SET cart = ? WHERE user_id = ?;");
-            ps.setInt(2, user.getUser_id());
+            ps.setInt(2, user_id);
             if (cart == null) {
                 ps.setBytes(1, null);
                 ps.execute();

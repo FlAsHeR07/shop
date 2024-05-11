@@ -25,7 +25,8 @@
         .container input[type="password"],
         .container input[type="email"],
         .container input[type="submit"],
-        .container input[type="fullName"] {
+        .container input[type="fullName"],
+        .container input[type="phoneNumber"] {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -69,6 +70,11 @@
         <input type="fullName" th:field="*{fullName}" id="fullName" name="fullName" required><br>
         <label for="email">Email:</label>
         <input type="email" th:field="*{email}" id="email" name="email" required><br>
+
+
+        <label for="phoneNumber">Phone:</label>
+        <input type="phoneNumber" th:field="*{phoneNumber}" id="phoneNumber" name="phoneNumber" required><br>
+
         <input type="submit" value="Зареєструватися">
     </form>
     <div class="login">

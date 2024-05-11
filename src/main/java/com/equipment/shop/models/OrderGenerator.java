@@ -1,6 +1,7 @@
 package com.equipment.shop.models;
 
 import com.liqpay.LiqPay;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -44,7 +45,7 @@ public class OrderGenerator {
         }
     }
 
-    public String createPaymentFormHtml(double uah) {
+    public String createPaymentFormHtml(HttpSession httpSession, double uah) {
         Map<String, String> params = new HashMap<>();
         params.put("action", "pay");
         params.put("amount", String.valueOf(uah));
@@ -53,8 +54,9 @@ public class OrderGenerator {
         params.put("order_id", String.valueOf(getId()));
         params.put("version", "3");
         params.put("sandbox", "1");
-        params.put("result_url", "http://localhost:8080/goods");
-        params.put("server_url", "http://localhost:8080/order/payment");
+        params.put("result_url", "http://electropoint.hopto.org/order/new");
+        params.put("server_url", "http://electropoint.hopto.org/order/payment");
+        params.put("info", String.valueOf(((User) httpSession.getAttribute("currentUser")).getUser_id()));
         LiqPay liqpay = new LiqPay(PUBLIC_KEY, PRIVATE_KEY);
         return liqpay.cnb_form(params);
     }

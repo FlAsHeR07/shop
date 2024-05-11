@@ -76,9 +76,9 @@ public class ShopApplication implements WebMvcConfigurer {
                     env.getProperty("spring.datasource.url"),
                     env.getProperty("spring.datasource.username"),
                     env.getProperty("spring.datasource.password"));
-            logger.debug("Database connection established successfully");
+            logger.info("Database connection established successfully");
         } catch (SQLException e) {
-            logger.debug("Connection with database failed!");
+            logger.error("Connection with database failed!");
             throw new RuntimeException(e);
         }
         return connection;

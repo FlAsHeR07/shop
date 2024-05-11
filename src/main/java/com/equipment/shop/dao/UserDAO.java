@@ -25,11 +25,12 @@ public class UserDAO {
 
     private void createUser(User user) {
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO users (username, password, email, full_name) VALUES (?, ?, ?, ?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO users (username, password, email, full_name, phone_number) VALUES (?, ?, ?, ?, ?);");
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getFullName());
+            ps.setString(5, user.getPhoneNumber());
             ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -44,6 +45,8 @@ public class UserDAO {
                     throw new RegistrationException("Username вже використовується!");
                 if (rs.getString("email").equals(user.getEmail()))
                     throw new RegistrationException("Email вже використовується!");
+                if (rs.getString("phone_number").equals(user.getEmail()))
+                    throw new RegistrationException("Номер телефону вже пов'язаний!");
             }
             if(!user.getUsername().matches("^[a-zA-Z][a-zA-Z0-9_]*$") || user.getUsername().length() < 8)
                 throw new RegistrationException("Username має починатись з літери a–z A–Z, може містити лише букви a–z A–Z 0–9 без пробілів, всього не менше 8 символів!");
@@ -53,6 +56,8 @@ public class UserDAO {
                 throw new RegistrationException("Email не дійсний!");
             if(!user.getFullName().matches("^[а-яА-ЯєЄіІїЇёЁ]+(\\s[а-яА-ЯєЄіІїЇёЁ]+){1,2}$|^[a-zA-Z]+(\\s[a-zA-Z]+){1,2}$"))
                 throw new RegistrationException("ПІБ не валідне!");
+            if(!user.getPhoneNumber().matches("^\\+380\\d{9}$"))
+                throw new RegistrationException("Номер телефону не валідний!");
             createUser(user);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -87,7 +92,8 @@ public class UserDAO {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("email"),
-                        rs.getString("full_name")
+                        rs.getString("full_name"),
+                        rs.getString("phone_number")
                 );
             }
             return null;

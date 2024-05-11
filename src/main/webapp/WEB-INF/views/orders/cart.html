@@ -66,7 +66,7 @@
 
     <div class="actions">
         <button class="btn" id="clear-cart" onclick="clearCart()">Очистити кошик</button>
-        <button class="btn" id="checkout">Оформити замовлення</button>
+        <!--<button class="btn" id="checkout">Оформити замовлення</button>-->
         <div th:utext="${liqpayForm}"></div>
     </div>
 
@@ -74,7 +74,7 @@
 
 <script>
     function clearCart() {
-        window.location.href = "http://localhost:8080/cart/clear";
+        window.location.href = "http://electropoint.hopto.org/cart/clear";
     }
 </script>
 
