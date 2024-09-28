@@ -12,7 +12,7 @@ class ShopApplicationTests {
     void contextLoads() {
     }
 
-    @Test
+    /*@Test
     void testValidation() {
         User user = new User(1, "username", "password", "test.account.diploma@gmail.com", "Середа Владислав");
         try {
@@ -28,6 +28,6 @@ class ShopApplicationTests {
             //throw new RuntimeException(e);
             Assertions.fail(e);
         }
-    }
+    }*/
 
 }

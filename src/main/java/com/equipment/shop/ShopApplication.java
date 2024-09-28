@@ -32,8 +32,6 @@ public class ShopApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication.run(ShopApplication.class, args);
     }
-
-    @Autowired
     private final ApplicationContext applicationContext;
 
     @Autowired

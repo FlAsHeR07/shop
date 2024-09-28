@@ -61,10 +61,12 @@ public class OrdersController {
             @RequestParam("signature") String signature
     ) {
         try {
-            BufferedReader reader = new BufferedReader( new InputStreamReader(new ByteArrayInputStream(Base64.getDecoder().decode(data))));
+            BufferedReader reader = new BufferedReader( new InputStreamReader(
+                    new ByteArrayInputStream(Base64.getDecoder().decode(data))));
             JSONObject jsonObject = new JSONObject(reader.readLine());
             int user_id = Integer.parseInt(jsonObject.getString("info"));
-            Order order = new Order(orderDAO.lastOrder() + 1, new Date(), jsonObject.getBigDecimal("amount").doubleValue(), cartDAO.getCart(user_id));
+            Order order = new Order(orderDAO.lastOrder() + 1, new Date(),
+                    jsonObject.getBigDecimal("amount").doubleValue(), cartDAO.getCart(user_id));
             orderDAO.addOrder(user_id, order);
             cartDAO.setCart(user_id, null);
             logger.info("Callback is caught from liqpay");
