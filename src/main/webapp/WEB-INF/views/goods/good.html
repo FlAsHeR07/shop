@@ -201,9 +201,9 @@
 
 <div class="container">
   <div class="item">
-    <img th:src= "*{'data:image/jpg;base64,' + good.getImage()}" height="350px" width="350px" alt="Product Image">
+    <img th:src= "*{'data:image/jpg;base64,' + good.getImageBase64()}" height="350px" width="350px" alt="Product Image">
     <div class="item-title" th:text="${good.getName()}"></div>
-    <div class="item-price" th:text="'Ціна, грн.: ' + ${good.getPrice_grn()}"></div>
+    <div class="item-price" th:text="'Ціна, грн.: ' + ${good.getPriceGrn()}"></div>
     <div class="item-category" th:text="'Категорія: ' + ${category}"></div>
     <div class="item-availability" th:text="'Доступність: ' + ${isAvailable}"></div>
     <div class="manufacturers">

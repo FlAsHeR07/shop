@@ -58,8 +58,10 @@
 <div class="container">
     <h1>Кошик</h1>
 
-    <div class="cart-item" th:each="entry : ${cart.entrySet()}">
-        <span><span th:text="${entry.getKey()} + ': '"></span><span th:text="${entry.getValue()} + ' од.'"></span></span>
+    <div class="cart-item" th:each="entry : ${cart.getCart().entrySet()}">
+        <span>
+            <span th:text="${entry.getKey().getName()} + ': '"></span><span th:text="${entry.getValue()} + ' од.'"></span>
+        </span>
     </div>
 
     <div class="price" th:text="'Ціна: ' + ${price} + ' UAH'"></div>

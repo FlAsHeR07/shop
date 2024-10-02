@@ -58,7 +58,7 @@
 <body>
 <div class="container">
     <h2>Увійдіть у систему</h2>
-    <form th:method="GET" th:action="@{/account/login}" th:object="${user}">
+    <form th:method="GET" th:action="@{/account/login}" th:object="${userDTO}">
         <label for="username">Username:</label>
         <input type="text" th:field="*{username}" id="username" name="username" required><br>
         <label for="password">Password:</label>

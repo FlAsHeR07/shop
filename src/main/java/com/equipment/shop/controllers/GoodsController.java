@@ -1,6 +1,6 @@
 package com.equipment.shop.controllers;
 
-import com.equipment.shop.dao.GoodDAO;
+import com.equipment.shop.dao.GoodRepository;
 import com.equipment.shop.models.Good;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,32 +14,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/goods")
 public class GoodsController {
 
-    private final GoodDAO goodDAO;
+    private final GoodRepository goodRepository;
 
     @Autowired
-    public GoodsController(GoodDAO goodDAO) {
-        this.goodDAO = goodDAO;
+    public GoodsController(GoodRepository goodRepository) {
+        this.goodRepository = goodRepository;
     }
+
 
     @GetMapping()
     public String showAll(HttpSession httpSession, Model model) {
         if (httpSession.getAttribute("currentUser") == null) {
             return "redirect:/account/current";
         }
-        model.addAttribute("goods", goodDAO.getAllGoods());
+        model.addAttribute("goods", goodRepository.findAll());
         model.addAttribute("user", httpSession.getAttribute("currentUser"));
         return "goods/goods";
     }
 
     @GetMapping("/{id}")
-    public String showByID(HttpSession httpSession, @PathVariable("id") int id, Model model) {
+    public String showByID(HttpSession httpSession, @PathVariable("id") long id, Model model) {
         if (httpSession.getAttribute("currentUser") == null) {
             return "redirect:/account/current";
         }
-        Good good = goodDAO.getGoodById(id);
+        Good good = goodRepository.getReferenceById(id);
         model.addAttribute("good", good);
-        model.addAttribute("isAvailable", goodDAO.isAvailableInStock(good) ? "наявний" : "відсутній");
-        model.addAttribute("category", goodDAO.getCategory(good));
+        model.addAttribute("isAvailable", good.getQuantity() > 0 ? "наявний" : "відсутній");
+        model.addAttribute("category", good.getCategory());
         model.addAttribute("user", httpSession.getAttribute("currentUser"));
         httpSession.setAttribute("openedItemId", id);
         return "goods/good";

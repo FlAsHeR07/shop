@@ -1,34 +1,43 @@
 package com.equipment.shop.models;
 
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
 
-public class Good {
-    private int good_id;
+@Access(AccessType.PROPERTY)
+@Entity
+public class Good implements Serializable {
+    @Access(AccessType.FIELD)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String name;
-    private long price_kopeck;
+    private long priceKopeck;
     private String description;
-    private int category_id;
-    private String imageBase64;
-    private List<String> manufacturers;
+    private String category;
+    private byte[] image;
+    private List<Manufacturer> manufacturers;
+    private int quantity;
 
-    public Good(int good_id, String name, long price_kopeck, String description, int category_id, String imageBase64, List<String> manufacturers) {
-        this.good_id = good_id;
+    public Good() {
+    }
+
+    public Good(String name, long priceKopeck, String description, String category, byte[] image, List<Manufacturer> manufacturers) {
         this.name = name;
-        this.price_kopeck = price_kopeck;
+        this.priceKopeck = priceKopeck;
         this.description = description;
-        this.category_id = category_id;
-        this.imageBase64 = imageBase64;
+        this.category = category;
+        this.image = image;
         this.manufacturers = manufacturers;
     }
 
-    public int getGood_id() {
-        return good_id;
+    public long getId() {
+        return id;
     }
 
-    public void setGood_id(int good_id) {
-        this.good_id = good_id;
-    }
-
+    @Column(columnDefinition = "text")
     public String getName() {
         return name;
     }
@@ -37,18 +46,20 @@ public class Good {
         this.name = name;
     }
 
-    public long getPrice_kopeck() {
-        return price_kopeck;
+    public long getPriceKopeck() {
+        return priceKopeck;
     }
 
-    public double getPrice_grn() {
-        return (double) (price_kopeck) / 100;
+    public void setPriceKopeck(long priceKopeck) {
+        this.priceKopeck = priceKopeck;
     }
 
-    public void setPrice_kopeck(long price_kopeck) {
-        this.price_kopeck = price_kopeck;
+    @Transient
+    public double getPriceGrn() {
+        return (double) (priceKopeck) / 100;
     }
 
+    @Column(columnDefinition = "text")
     public String getDescription() {
         return description;
     }
@@ -57,27 +68,47 @@ public class Good {
         this.description = description;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getImage() {
-        return imageBase64;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setImage(String image) {
-        this.imageBase64 = image;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
-    public List<String> getManufacturers() {
+    @Transient
+    public String getImageBase64() {
+        return Base64.getEncoder().encodeToString(image);
+    }
+
+
+    @ManyToMany
+    @JoinTable(
+        name = "good_manufacturer",
+        joinColumns = @JoinColumn(name = "good_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "manufacturer_id", referencedColumnName = "id")
+    )
+    public List<Manufacturer> getManufacturers() {
         return manufacturers;
     }
 
-    public void setManufacturers(List<String> manufacturers) {
+    public void setManufacturers(List<Manufacturer> manufacturers) {
         this.manufacturers = manufacturers;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

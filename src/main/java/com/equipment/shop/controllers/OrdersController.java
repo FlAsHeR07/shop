@@ -1,8 +1,8 @@
 package com.equipment.shop.controllers;
 
-import com.equipment.shop.dao.CartDAO;
-import com.equipment.shop.dao.GoodDAO;
-import com.equipment.shop.dao.OrderDAO;
+import com.equipment.shop.dao.OrderRepository;
+import com.equipment.shop.dao.UserRepository;
+import com.equipment.shop.models.Cart;
 import com.equipment.shop.models.Order;
 import com.equipment.shop.models.User;
 import jakarta.servlet.http.HttpSession;
@@ -20,25 +20,20 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 public class OrdersController {
-    private final Connection connection;
-    private final CartDAO cartDAO;
-    private final GoodDAO goodDAO;
-    private final OrderDAO orderDAO;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(OrdersController.class);
 
     @Autowired
-    public OrdersController(Connection connection, CartDAO cartDAO, GoodDAO goodDAO, OrderDAO orderDAO) {
-        this.connection = connection;
-        this.cartDAO = cartDAO;
-        this.goodDAO = goodDAO;
-        this.orderDAO = orderDAO;
+    public OrdersController(UserRepository userRepository, OrderRepository orderRepository) {
+        this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/order/new")
@@ -49,7 +44,7 @@ public class OrdersController {
     @GetMapping("/orders")
     public String showAllOrders(HttpSession httpSession, Model model) {
         User user = (User) httpSession.getAttribute("currentUser");
-        List<Order> orders = orderDAO.getOrders(user);
+        List<Order> orders = orderRepository.findAllByUser(user);
         model.addAttribute("orders", orders);
         return "order/all_orders";
     }
@@ -65,12 +60,16 @@ public class OrdersController {
                     new ByteArrayInputStream(Base64.getDecoder().decode(data))));
             JSONObject jsonObject = new JSONObject(reader.readLine());
             int user_id = Integer.parseInt(jsonObject.getString("info"));
-            Order order = new Order(orderDAO.lastOrder() + 1, new Date(),
-                    jsonObject.getBigDecimal("amount").doubleValue(), cartDAO.getCart(user_id));
-            orderDAO.addOrder(user_id, order);
-            cartDAO.setCart(user_id, null);
-            logger.info("Callback is caught from liqpay");
+            User currentUser = userRepository.findUserById(user_id);
+            Cart cartForUser = currentUser.getCart();
+            Order order = new Order(cartForUser.getCart(), currentUser, new Date());
 
+            //todo HERE save and flush orderRepository with new Order!!!!!!!!!!!!!!!!!!!!
+            orderRepository.saveAndFlush(order);
+            currentUser.getOrders().add(order);
+            cartForUser.getCart().clear();
+            userRepository.flush();
+            logger.info("Callback is caught from liqpay");
         } catch (RuntimeException | IOException e) {
             throw new RuntimeException(e);
         }

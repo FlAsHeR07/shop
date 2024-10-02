@@ -1,35 +1,43 @@
 package com.equipment.shop.models;
 
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.List;
 
+@Access(AccessType.PROPERTY)
+@Entity
+@Table(name = "\"user\"")
 public class User implements Serializable {
-    private int user_id;
+    @Access(AccessType.FIELD)
+    @Id
+    @Column(columnDefinition = "bigint")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String username;
     private String password;
     private String email;
     private String fullName;
     private String phoneNumber;
+    private List<Order> orders;
+    private Cart cart;
 
     public User() {
+        cart = new Cart();
     }
 
-    public User(int user_id, String username, String password, String email, String fullName, String phoneNumber) {
-        this.user_id = user_id;
+    public User(String username, String password, String email, String fullName, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+        cart = new Cart();
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public long getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -70,5 +78,22 @@ public class User implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    @OneToMany(mappedBy = "user")
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

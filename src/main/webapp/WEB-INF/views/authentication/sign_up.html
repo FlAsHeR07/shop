@@ -61,19 +61,19 @@
 <body>
 <div class="container">
     <h2>Реєстрація</h2>
-    <form th:method="POST" th:action="@{/account/signup}" th:object="${user}">
+    <form th:method="POST" th:action="@{/account/signup}" th:object="${userDTO}">
         <label for="username">Username:</label>
         <input type="text" th:field="*{username}" id="username" name="username" required><br>
         <label for="password">Password:</label>
         <input type="password" th:field="*{password}" id="password" name="password" required><br>
         <label for="fullName">ПІБ:</label>
-        <input type="fullName" th:field="*{fullName}" id="fullName" name="fullName" required><br>
+        <input type="text" th:field="*{fullName}" id="fullName" name="fullName" required><br>
         <label for="email">Email:</label>
         <input type="email" th:field="*{email}" id="email" name="email" required><br>
 
 
         <label for="phoneNumber">Phone:</label>
-        <input type="phoneNumber" th:field="*{phoneNumber}" id="phoneNumber" name="phoneNumber" required><br>
+        <input type="text" th:field="*{phoneNumber}" id="phoneNumber" name="phoneNumber" required><br>
 
         <input type="submit" value="Зареєструватися">
     </form>

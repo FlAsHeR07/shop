@@ -1,60 +1,52 @@
 package com.equipment.shop.models;
 
-import java.io.Serializable;
+
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.Map;
 
-public class Order implements Serializable {
-    private int order_id;
+@Access(AccessType.PROPERTY)
+@Entity
+@Table(name = "\"order\"")
+public class Order extends Cart{
+    @Access(AccessType.FIELD)
+    @Id
+    @Column(columnDefinition = "bigint")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private User user;
     private Date timeOfPayment;
-    private double price;
-    private Map<Integer, Integer> cart;
-    private Map<String, Integer> cartForView;
 
-    public Order(int order_id, Date timeOfPayment, double price, Map<Integer, Integer> cart) {
-        this.order_id = order_id;
+    public Order() {
+    }
+
+    public Order(Map<Good, Integer> cart, User user, Date timeOfPayment) {
+        super(cart);
+        this.user = user;
         this.timeOfPayment = timeOfPayment;
-        this.price = price;
-        this.cart = cart;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public long getId() {
+        return id;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    @ManyToOne
+    public User getUser() {
+        return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Temporal(value = TemporalType.DATE)
     public Date getTimeOfPayment() {
         return timeOfPayment;
     }
 
     public void setTimeOfPayment(Date timeOfPayment) {
         this.timeOfPayment = timeOfPayment;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public Map<Integer, Integer> getCart() {
-        return cart;
-    }
-
-    public void setCart(Map<Integer, Integer> cart) {
-        this.cart = cart;
-    }
-
-    public Map<String, Integer> getCartForView() {
-        return cartForView;
-    }
-
-    public void setCartForView(Map<String, Integer> cartForView) {
-        this.cartForView = cartForView;
     }
 }
