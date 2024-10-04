@@ -52,11 +52,11 @@
 
 <div class="container" th:each="order: ${orders}">
     <h2 th:text="'Замовлення №' + ${orders.indexOf(order) + 1}">Order id</h2>
-    <div class="cart-item" th:each="entry : ${order.getCartForView().entrySet()}">
-        <span><span th:text="${entry.getKey()} + ': '"></span><span th:text="${entry.getValue()} + ' од.'"></span></span>
+    <div class="cart-item" th:each="entry : ${order.getItems().entrySet()}">
+        <span><span th:text="${entry.getKey().getName()} + ': '"></span><span th:text="${entry.getValue()} + ' од.'"></span></span>
     </div>
 
-    <div class="price" th:text="'Ціна: ' + ${order.getPrice()} + ' UAH'"></div>
+    <div class="price" th:text="'Ціна: ' + ${order.calculatePrice()} + ' UAH'"></div>
     <div class="time" th:text="'Час оформлення: ' + ${order.getTimeOfPayment().toString()}"></div>
 
 </div>

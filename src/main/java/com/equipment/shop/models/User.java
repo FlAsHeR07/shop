@@ -1,10 +1,10 @@
 package com.equipment.shop.models;
 
-
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.List;
+
 
 @Access(AccessType.PROPERTY)
 @Entity
@@ -33,7 +33,6 @@ public class User implements Serializable {
         this.email = email;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
-        cart = new Cart();
     }
 
     public long getId() {
@@ -80,7 +79,7 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     public List<Order> getOrders() {
         return orders;
     }
@@ -89,6 +88,7 @@ public class User implements Serializable {
         this.orders = orders;
     }
 
+    @OneToOne(fetch = FetchType.EAGER)
     public Cart getCart() {
         return cart;
     }

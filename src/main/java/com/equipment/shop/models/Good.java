@@ -90,7 +90,7 @@ public class Good implements Serializable {
     }
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "good_manufacturer",
         joinColumns = @JoinColumn(name = "good_id", referencedColumnName = "id"),

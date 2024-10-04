@@ -5,6 +5,8 @@ import com.equipment.shop.dao.UserRepository;
 import com.equipment.shop.models.Cart;
 import com.equipment.shop.models.OrderGenerator;
 import com.equipment.shop.models.User;
+import com.equipment.shop.services.CartService;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,33 +19,37 @@ public class CartController {
     private final GoodRepository goodRepository;
     private final UserRepository userRepository;
     private final OrderGenerator orderGenerator;
+    private final CartService cartService;
+
 
     @Autowired
-    public CartController(GoodRepository goodRepository, UserRepository userRepository, OrderGenerator orderGenerator) {
+    public CartController(GoodRepository goodRepository, UserRepository userRepository, OrderGenerator orderGenerator, CartService cartService) {
         this.goodRepository = goodRepository;
         this.userRepository = userRepository;
         this.orderGenerator = orderGenerator;
+        this.cartService = cartService;
     }
 
     @GetMapping("/add")
     public String addToCart(HttpSession httpSession, @RequestParam("quantity") int quantity, Model model) {
-        //todo cartDAO remove for cartRepository
-        User currentUser = (User) httpSession.getAttribute("currentUser");
+        User userSession = (User) httpSession.getAttribute("currentUser");
+        User currentUser = userRepository.findUserById(userSession.getId());
         Long itemId = (Long) httpSession.getAttribute("openedItemId");
         Cart cart = currentUser.getCart();
-        Integer currentQuantity = cart.getCart().get(goodRepository.getReferenceById(itemId));
+        Integer currentQuantity = cart.getItems().get(goodRepository.getReferenceById(itemId));
         if (currentQuantity == null) {
-            cart.getCart().put(goodRepository.getReferenceById(itemId), quantity);
+            cart.getItems().put(goodRepository.getReferenceById(itemId), quantity);
         } else {
-            cart.getCart().put(goodRepository.getReferenceById(itemId), currentQuantity + quantity);
+            cart.getItems().put(goodRepository.getReferenceById(itemId), currentQuantity + quantity);
         }
-        userRepository.flush();
+        userRepository.saveAndFlush(currentUser);
         return "redirect:/goods";
     }
 
     @GetMapping()
     public String showCart(HttpSession httpSession, Model model) {
-        User currentUser = (User) httpSession.getAttribute("currentUser");
+        User userSession = (User) httpSession.getAttribute("currentUser");
+        User currentUser = userRepository.findUserById(userSession.getId());
         Cart cart = currentUser.getCart();
         double price = cart.calculatePrice();
 
@@ -56,8 +62,9 @@ public class CartController {
 
     @GetMapping("/clear")
     public String clearCart(HttpSession httpSession, Model model) {
-        User currentUser = (User) httpSession.getAttribute("currentUser");
-        currentUser.getCart().getCart().clear();
+        User userSession = (User) httpSession.getAttribute("currentUser");
+        User currentUser = userRepository.findUserById(userSession.getId());
+        currentUser.getCart().getItems().clear();
         return "redirect:/goods";
     }
 }

@@ -1,9 +1,11 @@
 package com.equipment.shop.services;
 
+import com.equipment.shop.dao.CartRepository;
 import com.equipment.shop.dao.UserRepository;
 import com.equipment.shop.dto.UserDTO;
 import com.equipment.shop.exceptions.AuthenticationException;
 import com.equipment.shop.exceptions.RegistrationException;
+import com.equipment.shop.models.Cart;
 import com.equipment.shop.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,19 +31,24 @@ public class AccountService {
 
 
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
 
     @Autowired
-    public AccountService(UserRepository userRepository) {
+    public AccountService(UserRepository userRepository, CartRepository cartRepository) {
         this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
     }
 
     private void createUser(UserDTO userDTO) {
+        Cart cart = new Cart();
+        cartRepository.saveAndFlush(cart);
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
         user.setFullName(userDTO.getFullName());
         user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setCart(cart);
         userRepository.saveAndFlush(user);
     }
 

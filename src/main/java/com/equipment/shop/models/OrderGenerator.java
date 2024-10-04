@@ -41,7 +41,7 @@ public class OrderGenerator {
         params.put("amount", String.valueOf(uah));
         params.put("currency", "UAH");
         params.put("description", "Оплата обраних товарів");
-        params.put("order_id", String.valueOf(orderRepository.count() + 1));
+        params.put("order_id", String.valueOf(orderRepository.count() + 12));
         params.put("version", "3");
         params.put("sandbox", "1");
         params.put("result_url", "http://electropoint.hopto.org/order/new");

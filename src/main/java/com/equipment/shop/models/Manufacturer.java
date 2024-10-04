@@ -16,8 +16,6 @@ public class Manufacturer {
     private String description;
     private List<Good> goods;
 
-    Good good;
-
     public Manufacturer() {
     }
 
@@ -57,7 +55,7 @@ public class Manufacturer {
         this.description = description;
     }
 
-    @ManyToMany(mappedBy = "manufacturers")
+    @ManyToMany(mappedBy = "manufacturers", fetch = FetchType.EAGER)
     public List<Good> getGoods() {
         return goods;
     }

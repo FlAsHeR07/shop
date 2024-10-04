@@ -1,5 +1,6 @@
 package com.equipment.shop.controllers;
 
+import com.equipment.shop.dao.CartRepository;
 import com.equipment.shop.dao.OrderRepository;
 import com.equipment.shop.dao.UserRepository;
 import com.equipment.shop.models.Cart;
@@ -26,14 +27,16 @@ import java.util.List;
 
 @Controller
 public class OrdersController {
+    private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(OrdersController.class);
 
     @Autowired
-    public OrdersController(UserRepository userRepository, OrderRepository orderRepository) {
+    public OrdersController(UserRepository userRepository, OrderRepository orderRepository, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.cartRepository = cartRepository;
     }
 
     @GetMapping("/order/new")
@@ -62,13 +65,15 @@ public class OrdersController {
             int user_id = Integer.parseInt(jsonObject.getString("info"));
             User currentUser = userRepository.findUserById(user_id);
             Cart cartForUser = currentUser.getCart();
-            Order order = new Order(cartForUser.getCart(), currentUser, new Date());
+            Cart cartForOrder = new Cart(cartForUser);
+            Order order = new Order(cartForOrder.getItems(), currentUser, new Date());
 
-            //todo HERE save and flush orderRepository with new Order!!!!!!!!!!!!!!!!!!!!
+            cartRepository.saveAndFlush(cartForOrder);
             orderRepository.saveAndFlush(order);
             currentUser.getOrders().add(order);
-            cartForUser.getCart().clear();
-            userRepository.flush();
+            cartForUser.getItems().clear();
+            cartRepository.saveAndFlush(cartForUser);
+            userRepository.saveAndFlush(currentUser);
             logger.info("Callback is caught from liqpay");
         } catch (RuntimeException | IOException e) {
             throw new RuntimeException(e);

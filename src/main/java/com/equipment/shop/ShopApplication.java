@@ -1,5 +1,6 @@
 package com.equipment.shop;
 
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,6 +22,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
+import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,6 +32,7 @@ import java.sql.SQLException;
 @Configuration("com.equipment.shop")
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
+@EnableTransactionManagement
 public class ShopApplication implements WebMvcConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(ShopApplication.class);
@@ -82,5 +89,4 @@ public class ShopApplication implements WebMvcConfigurer {
         }
         return connection;
     }
-
 }

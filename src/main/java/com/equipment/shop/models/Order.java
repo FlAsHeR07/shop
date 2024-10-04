@@ -32,7 +32,7 @@ public class Order extends Cart{
         return id;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public User getUser() {
         return user;
     }
