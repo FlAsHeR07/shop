@@ -1,6 +1,5 @@
 package com.equipment.shop.controllers;
 
-import com.equipment.shop.dao.UserRepository;
 import com.equipment.shop.dto.UserDTO;
 import com.equipment.shop.exceptions.AuthenticationException;
 import com.equipment.shop.exceptions.RegistrationException;

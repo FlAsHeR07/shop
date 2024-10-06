@@ -1,8 +1,5 @@
 package com.equipment.shop;
 
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -22,12 +15,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
-import javax.sql.DataSource;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 @SpringBootApplication
 @Configuration("com.equipment.shop")
 @EnableWebMvc
@@ -35,15 +22,10 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class ShopApplication implements WebMvcConfigurer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShopApplication.class);
-
     public static void main(String[] args) {
         SpringApplication.run(ShopApplication.class, args);
     }
     private final ApplicationContext applicationContext;
-
-    @Autowired
-    Environment env;
 
     @Autowired
     public ShopApplication(ApplicationContext applicationContext) {
@@ -72,21 +54,5 @@ public class ShopApplication implements WebMvcConfigurer {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
         registry.viewResolver(resolver);
-    }
-
-    @Bean
-    public Connection connection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(
-                    env.getProperty("spring.datasource.url"),
-                    env.getProperty("spring.datasource.username"),
-                    env.getProperty("spring.datasource.password"));
-            logger.info("Database connection established successfully");
-        } catch (SQLException e) {
-            logger.error("Connection with database failed!");
-            throw new RuntimeException(e);
-        }
-        return connection;
     }
 }

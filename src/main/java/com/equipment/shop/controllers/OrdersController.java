@@ -81,8 +81,8 @@ public class OrdersController {
     }
 }
 
-
 /*
+* Json from liqpay example
 * {"payment_id":2460231630,
 * "action":"pay",
 * "status":"sandbox",

@@ -21,7 +21,6 @@ public class GoodsController {
         this.goodRepository = goodRepository;
     }
 
-
     @GetMapping()
     public String showAll(HttpSession httpSession, Model model) {
         if (httpSession.getAttribute("currentUser") == null) {
@@ -45,5 +44,4 @@ public class GoodsController {
         httpSession.setAttribute("openedItemId", id);
         return "goods/good";
     }
-
 }
